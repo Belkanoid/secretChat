@@ -6,9 +6,9 @@ data class Message (
     @SerializedName("id")
     val id: Int,
     @SerializedName("reciever")
-    val receiver: Int,
+    val receiver: Long,
     @SerializedName("sender")
-    val sender: Int,
+    val sender: Long,
     @SerializedName("text")
     val message: String,
     @SerializedName("timestamp")

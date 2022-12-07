@@ -4,6 +4,7 @@ import android.text.BoringLayout
 import androidx.lifecycle.LiveData
 import com.belkanoid.secretchat.domain.entity.Message
 import com.belkanoid.secretchat.domain.entity.Queue
+import com.belkanoid.secretchat.domain.entity.User
 
 interface MessengerRepository {
 
@@ -13,6 +14,7 @@ interface MessengerRepository {
 
     suspend fun getQueue(userId: Long): List<Queue>
 
-    suspend fun createUser(userName: String): Long
+    suspend fun createUser(userName: String)
 
+    suspend fun getUser(userId: Long): User
 }

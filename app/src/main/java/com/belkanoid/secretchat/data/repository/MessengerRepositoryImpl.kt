@@ -6,7 +6,11 @@ import com.belkanoid.secretchat.data.dto.UserBody
 import com.belkanoid.secretchat.data.network.ApiFactory
 import com.belkanoid.secretchat.domain.entity.Message
 import com.belkanoid.secretchat.domain.entity.Queue
+import com.belkanoid.secretchat.domain.entity.User
 import com.belkanoid.secretchat.domain.repository.MessengerRepository
+import com.belkanoid.secretchat.presentation.Injector
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -58,21 +62,30 @@ class MessengerRepositoryImpl @Inject constructor() : MessengerRepository {
             ?: throw RuntimeException("Message is: ${response.body()} and ${response.isSuccessful}")
     }
 
-    override suspend fun createUser(userName: String): Long {
+    override suspend fun createUser(userName: String) {
         val userBody = UserBody(name = userName)
-        var userId: Long = -1
         service.createUser(userBody).enqueue(
-            object : Callback<UserBody> {
+            object : retrofit2.Callback<UserBody> {
                 override fun onResponse(call: Call<UserBody>, response: Response<UserBody>) {
-                    userId = response.body()?.id ?: -1
+                    val userId = response.body()?.id ?: -1L
+                    Injector.get().getInteractor().let {
+                        it.saveUserId(userId)
+                        runBlocking {
+                            it.refreshQueue()
+                        }
+                    }
+
                     Log.d("Error on CreateUser", response.message() + " " + response.isSuccessful)
                 }
                 override fun onFailure(call: Call<UserBody>, t: Throwable) {
                     Log.d("Error on CreateUser", t.toString())
                 }
-
             }
         )
-        return userId
+    }
+
+    override suspend fun getUser(userId: Long): User {
+        val response = service.getUser(userId = userId)
+        return response.body() ?: User(-1L, "Пользователь не найден")
     }
 }
