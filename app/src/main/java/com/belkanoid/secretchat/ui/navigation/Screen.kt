@@ -3,6 +3,7 @@ package com.belkanoid.secretchat.ui.navigation
 sealed class Screen(val route: String) {
     object MessagesScreen: Screen("messages_route")
     object NewMessageScreen: Screen("new_message_route")
+    object ConversationScreen: Screen("conversation_route")
 
     fun withArgs(vararg args: String): String{
         return buildString {

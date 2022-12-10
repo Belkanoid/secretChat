@@ -34,7 +34,7 @@ fun MessageList(
     users: List<User>,
     onReplayButton: (userId: String) -> Unit,
     onNewMessage: () -> Unit,
-    onOpenMessageClick: (message: Message) -> Unit,
+    onOpenMessageClick: (senderId: Long) -> Unit,
 ) {
     Box() {
         LazyColumn(
@@ -54,7 +54,7 @@ fun MessageList(
                         messageData = messageData,
                         onReplayButton = { onReplayButton(messageData.sender.id.toString()) }
                     ) {
-
+                        onOpenMessageClick(messageData.sender.id)
                     }
                 }
             )

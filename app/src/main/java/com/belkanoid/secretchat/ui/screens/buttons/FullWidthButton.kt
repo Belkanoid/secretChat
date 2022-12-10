@@ -26,7 +26,6 @@ fun FullWidthButton(
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Gray),
         modifier = modifier
-            .padding(20.dp)
             .fillMaxWidth()
     ) {
         Text(

@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.belkanoid.secretchat.ui.screens.ConversationScreen.ConversationScreenController
 import com.belkanoid.secretchat.ui.screens.messageList.MessageListController
 import com.belkanoid.secretchat.ui.screens.newMessage.NewMessageController
 
@@ -29,6 +30,18 @@ fun MainNavGraph(navController: NavHostController = rememberNavController()) {
             )
         ) {
             NewMessageController(navController, userId = it.arguments?.getString("userId")?: "")
+        }
+        composable(
+            route = Screen.ConversationScreen.route + "/{companionUserId}",
+            arguments = listOf(
+                navArgument("companionUserId") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                    nullable = true
+                }
+            )
+        ) {
+            ConversationScreenController(navController, companionUserId = it.arguments?.getString("companionUserId")?: "")
         }
     }
 }

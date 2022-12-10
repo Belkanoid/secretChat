@@ -66,6 +66,7 @@ fun NewMessage(
                 value = receiverID,
                 onValueChange = {
                     receiverID = it
+                    errorReceiverId = false
                 },
                 isError = errorReceiverId,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -98,7 +99,7 @@ fun NewMessage(
         }
 
         FullWidthButton(text = "Отправить", modifier = Modifier.align(Alignment.BottomCenter)) {
-            if (!errorReceiverId && receiverID.isNotBlank()) {
+            if (receiverID.isNotBlank() && errorReceiverId == false) {
                 onSendMessage(receiverID.toLong(), userMessage)
             } else {
                 showErrorDialog = true

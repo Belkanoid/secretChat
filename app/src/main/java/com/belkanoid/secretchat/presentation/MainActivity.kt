@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.belkanoid.secretchat.ui.navigation.MainNavGraph
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
@@ -33,9 +34,8 @@ class MainActivity : ComponentActivity() {
                     TopAppBar(
                         title = {
                             var userName by remember { mutableStateOf("") }
-                            component.getInteractor().userDefined.observe(
-                                LocalLifecycleOwner.current) {
-                                runBlocking {
+                            component.getInteractor().userDefined.observe(LocalLifecycleOwner.current) {
+                                runBlocking(Dispatchers.Default) {
                                     val user = component.getInteractor().getUser()
                                     userName = "${user.name}#${user.id}"
                                     Log.d("MESS on topbar", userName)
@@ -61,8 +61,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        component.getInteractor().refreshQueueJob?.cancel()
+    override fun onPause() {
+        super.onPause()
+//        component.getInteractor().stopRefreshJob()
+
     }
+
 }

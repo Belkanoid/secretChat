@@ -68,12 +68,7 @@ class MessengerRepositoryImpl @Inject constructor() : MessengerRepository {
             object : retrofit2.Callback<UserBody> {
                 override fun onResponse(call: Call<UserBody>, response: Response<UserBody>) {
                     val userId = response.body()?.id ?: -1L
-                    Injector.get().getInteractor().let {
-                        it.saveUserId(userId)
-                        runBlocking {
-                            it.refreshQueue()
-                        }
-                    }
+                    Injector.get().getInteractor().saveUserId(userId)
 
                     Log.d("Error on CreateUser", response.message() + " " + response.isSuccessful)
                 }
