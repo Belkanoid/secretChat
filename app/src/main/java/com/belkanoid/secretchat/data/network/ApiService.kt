@@ -23,11 +23,11 @@ interface ApiService {
     @POST("messages")
     fun sendMessage(@Body postMessageBody: MessageBody): Call<MessageBody>
 
-    @GET("messages/{id}")
-    suspend fun getMessage(@Path("id") messageId: Long): Response<Message>
+    @GET("messages/{id}?token={token}")
+    suspend fun getMessage(@Path("id") messageId: Long,@Path("token") token: String): Response<Message>
 
-    @GET("quaue/{id}")
-    suspend fun getQueue(@Path("id") userId: Long): Response<List<Queue>>
+    @GET("quaue/{id}?token={token}")
+    suspend fun getQueue(@Path("id") userId: Long,@Path("token") token: String): Response<List<Queue>>
 
     @GET("users/{id}")
     suspend fun getUser(@Path("id") userId: Long): Response<User>
