@@ -47,7 +47,9 @@ fun MessageList(
                         message = messages[index],
                         sender = users.find { messages[index].sender == it.id } ?: User(
                             -1L,
-                            "error"
+                            "error",
+                            "",
+                            "",
                         )
                     )
                     MessageListItem(
@@ -140,12 +142,12 @@ private fun Preview1() {
             Message(0, 0, 0, "absadfsdfsdfasdddd", 82233213123L, false),
         ),
         listOf(
-            User(0, "test"),
-            User(0, "test"),
-            User(0, "test"),
-            User(0, "test"),
-            User(0, "test"),
-            User(0, "test")
+            User(0, "test", "", ""),
+            User(0, "test","", ""),
+            User(0, "test","", ""),
+            User(0, "test","", ""),
+            User(0, "test","", ""),
+            User(0, "test","", "")
         ),
         onNewMessage = {},
         onReplayButton = {},
@@ -159,7 +161,7 @@ private fun Preview2() {
     MessageListItem(
         messageData = MessageDataStyle(
             Message(0, 0, 0, "absadfsdfsdfasdddd", 82233213123L, false),
-            User(0, "test")
+            User(0, "test", "", "")
         ),
         onReplayButton = {},
         onClick = {}

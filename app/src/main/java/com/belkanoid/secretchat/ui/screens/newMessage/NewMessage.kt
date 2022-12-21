@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.belkanoid.secretchat.domain.entity.User
 import com.belkanoid.secretchat.ui.dialogs.ErrorDialog
 import com.belkanoid.secretchat.ui.screens.buttons.FullWidthButton
+import java.lang.Exception
 
 @Composable
 fun NewMessage(
@@ -115,6 +116,6 @@ fun NewMessage(
 @Preview
 @Composable
 private fun Preview() {
-    NewMessage("", { _ -> User(1, "") }) { _, _ ->
+    NewMessage("", { _ -> User(1, "", "", "") }) { _, _ ->
     }
 }

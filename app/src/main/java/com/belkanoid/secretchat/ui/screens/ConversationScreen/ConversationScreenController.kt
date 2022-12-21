@@ -7,9 +7,8 @@ import androidx.navigation.NavController
 import com.belkanoid.secretchat.domain.entity.Message
 import com.belkanoid.secretchat.presentation.Injector
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 @Composable
 fun ConversationScreenController(
@@ -25,26 +24,32 @@ fun ConversationScreenController(
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LaunchedEffect(true) {
-        launch(Dispatchers.IO) {
+        withContext(Dispatchers.IO) {
             interactor.startCompanionRefreshJob(companionId = companionUserId.toLong())
-            Log.d("MESS on startCompRe", "olo")
+            Log.d("MQSS on startCompRe", "${conversationMessages.size}")
         }
     }
 
     interactor.initialized.observe(lifecycleOwner) {
         val allMessages = interactor.messages.value
-        companionMessages = allMessages?.filter { it.sender == companionUserId.toLong() } ?: listOf()
+        conversationMessages = emptyList()
+        companionMessages =
+            allMessages?.filter { it.sender == companionUserId.toLong() } ?: listOf()
     }
 
     interactor.companionInitialized.observe(lifecycleOwner) {
-        userSelfMessages = interactor.companionMessages.value ?: listOf()
+        userSelfMessages =
+            interactor.companionMessages.value?.filter { it.sender == interactor.getUserId() }
+                ?: listOf()
+        conversationMessages = emptyList()
         conversationMessages = userSelfMessages + companionMessages
         conversationMessages = conversationMessages.sortedBy { it.timestamp }
+        Log.d("MQSS on start2", "${conversationMessages.size}")
     }
 
     ConversationScreen(
         companionId = companionUserId.toLong(),
-        conversationMessages = conversationMessages.toList(),
+        conversationMessages = conversationMessages.toHashSet().toList(),
     ) { text ->
         interactor.sendMessage(companionUserId.toLong(), text)
     }
@@ -54,6 +59,7 @@ fun ConversationScreenController(
             interactor.companionInitialized.removeObservers(lifecycleOwner)
             interactor.initialized.removeObservers(lifecycleOwner)
             interactor.stopCompanionRefreshJob()
+            conversationMessages = emptyList()
         }
     }
 }
