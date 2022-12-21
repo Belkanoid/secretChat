@@ -17,8 +17,23 @@ class SharedPreferences @Inject constructor(context: Context) {
         return sharedPreferences.getLong(name, -1)
     }
 
+    fun putString(name: String, value: String) {
+        val isExist = getString(name)
+        if (isExist.isBlank()) {
+            editor.putString(name, value)
+            editor.apply()
+        }
+    }
+
+    fun getString(name: String): String {
+        return sharedPreferences.getString(name, "") ?: ""
+    }
+
     companion object {
         private const val sharedName = "Shared Messenger"
         const val USER_ID = "userId"
+        const val TOKEN = "token"
+        const val PRIVATE_KEY = "privateKey"
+        const val PUBLIC_KEY = "publicKey"
     }
 }

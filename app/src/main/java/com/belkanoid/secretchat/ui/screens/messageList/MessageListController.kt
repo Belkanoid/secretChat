@@ -51,16 +51,16 @@ fun MessageListController(
         }
     }
 
-//    DisposableEffect(lifecycleOwner) {
-//        onDispose {
-//            interactor.needToCreateUser.removeObservers(lifecycleOwner)
-//            interactor.initialized.removeObservers(lifecycleOwner)
-//        }
-//    }
+    DisposableEffect(lifecycleOwner) {
+        onDispose {
+            interactor.needToCreateUser.removeObservers(lifecycleOwner)
+            interactor.initialized.removeObservers(lifecycleOwner)
+        }
+    }
 
 
     MessageList(
-        messages = messages,
+        messages = messages.sortedByDescending { it.timestamp },
         users = users,
         onNewMessage = {
             navController.navigate(Screen.NewMessageScreen.withArgs("0"))

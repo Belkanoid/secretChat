@@ -76,13 +76,25 @@ fun CreateUserDialog(
                 )
 
                 FullWidthButton(text = "Продолжить") {
-                    onClick(userName)
+                    val validName = validateName(userName)
+                    onClick(validName)
                     onDismissRequest()
                 }
             }
         }
 
     }
+}
+
+private fun validateName(name: String): String {
+    var validName = name
+    if (validName.contains("\n")){
+        validName = validName.replace("\n", "")
+    }
+    if (validName.contains("\r")){
+        validName = validName.replace("\r", "")
+    }
+    return validName
 }
 
 @Preview

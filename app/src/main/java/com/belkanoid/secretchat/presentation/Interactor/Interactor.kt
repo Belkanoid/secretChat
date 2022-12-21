@@ -23,7 +23,7 @@ class Interactor @Inject constructor(
     private var refreshQueueJob: Job? = null
     private var refreshCompanionQueueJob: Job? = null
 
-    fun startRefreshJob() {
+    private suspend fun startRefreshJob() {
         refreshQueueJob = refreshQueue()
     }
 
@@ -31,12 +31,13 @@ class Interactor @Inject constructor(
         refreshQueueJob?.cancel()
     }
 
-    fun startCompanionRefreshJob(companionId: Long) {
+    suspend fun startCompanionRefreshJob(companionId: Long) {
         refreshCompanionQueueJob = refreshCompanionQueue(companionId)
     }
 
     fun stopCompanionRefreshJob() {
         refreshCompanionQueueJob?.cancel()
+        _companionMessageList.postValue(listOf())
     }
 
     var _userId = sharedPreferences.getLong(name = USER_ID)
@@ -80,7 +81,7 @@ class Interactor @Inject constructor(
         }
     }
 
-    private fun initApp() {
+    private suspend fun initApp() {
         if (getUserId() == -1L) {
             _needToCreateUser.postValue(Unit)
         } else {
@@ -89,7 +90,7 @@ class Interactor @Inject constructor(
         }
     }
 
-    suspend fun initCompanionQueue(companionId: Long) {
+    private suspend fun initCompanionQueue(companionId: Long) {
         withContext(Dispatchers.IO) {
             try {
                 val queue = repository.getQueue(userId = companionId)
@@ -101,6 +102,7 @@ class Interactor @Inject constructor(
             }
         }
         companionInitialized.postValue(Unit)
+        Log.d("MASS", "initCompQueue")
     }
 
     private suspend fun initCompanionMessageList(queue: List<Queue>) {
@@ -127,7 +129,7 @@ class Interactor @Inject constructor(
             }
         }
         initialized.postValue(Unit)
-        Log.d("MASS", "init")
+        Log.d("MASS", "initQueue")
     }
 
     private suspend fun initMessageList(queue: List<Queue>) {
@@ -172,21 +174,25 @@ class Interactor @Inject constructor(
         }
     }
 
-
-    private fun refreshQueue(): Job {
+    suspend fun getUserPublicKey(userId: Long): User {
+        return withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
+            getUser(userId)
+        }
+    }
+    private suspend fun refreshQueue(): Job {
         val userId = getUserId()
         return CoroutineScope(Dispatchers.IO).launch {
-            delay(3000L)
             while (refreshQueueJob?.isCancelled == false) {
+                delay(3000L)
                 initQueue(userId)
             }
         }
     }
 
-    private fun refreshCompanionQueue(companionId: Long): Job {
+    private suspend fun refreshCompanionQueue(companionId: Long): Job {
         return CoroutineScope(Dispatchers.IO).launch {
-            delay(3000L)
             while (refreshCompanionQueueJob?.isCancelled == false) {
+                delay(3000L)
                 initCompanionQueue(companionId)
             }
         }

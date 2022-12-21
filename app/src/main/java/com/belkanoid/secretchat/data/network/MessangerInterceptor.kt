@@ -14,6 +14,7 @@ class MessangerInterceptor : Interceptor {
         val newRequest = originalRequest.newBuilder()
             .url(newUrl)
             .header("Content-Type", "application/json")
+            .header("Accept-Encoding", "identity")
             .build()
 
         return chain.proceed(newRequest)

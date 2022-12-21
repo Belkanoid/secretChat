@@ -7,4 +7,8 @@ data class User(
     val id: Long,
     @SerializedName("name")
     val name: String,
+    @SerializedName("pkey")
+    val PublicKey:String,
+    @SerializedName("token")
+    val token:String,
 )

@@ -7,10 +7,7 @@ import com.belkanoid.secretchat.domain.entity.Queue
 import com.belkanoid.secretchat.domain.entity.User
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 
 interface ApiService {
@@ -24,10 +21,10 @@ interface ApiService {
     fun sendMessage(@Body postMessageBody: MessageBody): Call<MessageBody>
 
     @GET("messages/{id}")
-    suspend fun getMessage(@Path("id") messageId: Long): Response<Message>
+    suspend fun getMessage(@Path("id") messageId: Long, @Query("token") token: String): Response<Message>
 
     @GET("quaue/{id}")
-    suspend fun getQueue(@Path("id") userId: Long): Response<List<Queue>>
+    suspend fun getQueue(@Path("id") userId: Long, @Query("token") token: String): Response<List<Queue>>
 
     @GET("users/{id}")
     suspend fun getUser(@Path("id") userId: Long): Response<User>
